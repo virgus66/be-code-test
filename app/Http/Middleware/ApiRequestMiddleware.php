@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 use function count;
 
 /**
@@ -21,11 +23,13 @@ class ApiRequestMiddleware
      */
     public function handle(Request $request, \Closure $next)
     {
+        
+
         if (\is_string($request->route()->action['uses'])) {
             $req = explode('\\', $request->route()->action['uses']);
 
             if ($req) {
-                $req = $req[count($req) - 1];
+                $req = end($req);
                 [$controller, $action] = explode('@', $req, 2);
 
                 $request->attributes->add([

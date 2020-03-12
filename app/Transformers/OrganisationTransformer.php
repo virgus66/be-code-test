@@ -14,13 +14,33 @@ use League\Fractal\TransformerAbstract;
 class OrganisationTransformer extends TransformerAbstract
 {
     /**
+     * List of resources to automatically include
+     *
+     * @var array
+     */
+    protected $defaultIncludes = [
+        'user'
+    ];
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = [
+        
+    ];
+    /**
      * @param Organisation $organisation
      *
      * @return array
      */
     public function transform(Organisation $organisation): array
     {
-        return [];
+        return [
+            'name'      => (string) $organisation->name,
+            'trial_end' => (string) $organisation->trial_end,
+            'subscribed'=> (boolean) $organisation->subscribed,
+        ];
     }
 
     /**
@@ -30,6 +50,7 @@ class OrganisationTransformer extends TransformerAbstract
      */
     public function includeUser(Organisation $organisation)
     {
-        return $this->item($organisation->user, new UserTransformer());
+        $user = $organisation->owner;
+        return $this->item($user, new UserTransformer());
     }
 }
