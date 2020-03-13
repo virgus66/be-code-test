@@ -24,22 +24,8 @@ class OrganisationController extends ApiController
      *
      * @return JsonResponse
      */
-    public function store(Request $req, OrganisationService $service): JsonResponse
+    public function store(StoreOrganisation $req, OrganisationService $service): JsonResponse
     {
-        $validator = Validator::make($req->all(), [
-            'name' => 'required|min:2',
-        ]);
-        $errors = $validator->errors();
-
-        if (sizeof($errors) > 0) {
-            $errArray = [];
-            foreach( $errors->all() as $message ) {
-                $errArray[] = $message;
-            }
-            return response()->json(['errors' => $errArray]);
-        }
-        
-
         /** @var Organisation $organisation */
         $organisation = $service->createOrganisation($req->all());
         
@@ -51,7 +37,8 @@ class OrganisationController extends ApiController
     public function listAll(OrganisationService $service)
     {
         $organizations = $service->getOrganizationsList();
-        
-        return $organizations;
+
+        return $this->transformCollection('organisations', $organizations)
+            ->respond();
     }
 }

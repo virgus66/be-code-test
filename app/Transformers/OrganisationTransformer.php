@@ -19,7 +19,7 @@ class OrganisationTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [
-        'user'
+
     ];
     /**
      * List of resources possible to include
@@ -27,7 +27,7 @@ class OrganisationTransformer extends TransformerAbstract
      * @var array
      */
     protected $availableIncludes = [
-        
+        'user'
     ];
     /**
      * @param Organisation $organisation

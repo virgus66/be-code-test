@@ -47,33 +47,19 @@ class OrganisationService
      * @return JsonResponse
      */
 
-     public function getOrganizationsList(): JsonResponse
+     public function getOrganizationsList()
      {
         $filter = $_GET['filter'] ?? false;
 
-        $Organisations = Organisation::all();
-        $Organisation_Array = array();
-
-        foreach ($Organisations->all() as $x) {
-            $x = (new OrganisationTransformer)->transform($x);
-
-            if ($filter !== false) {
-                if ($filter == 'subbed') {
-                    if ($x['subscribed'] == 1) {
-                        array_push($Organisation_Array, $x);
-                    }
-                } else if ($filter == 'trail') {
-                    if ($x['subscribed'] == 0) {
-                        array_push($Organisation_Array, $x);
-                    }
-                } else {
-                    array_push($Organisation_Array, $x);
-                }
+        $organisations = Organisation::all();
+        return $organisations->filter(function ($organisation) use ($filter) {
+            if ($filter == 'subbed') {
+                return $organisation->subscribed;
+            } else if ($filter == 'trial') {
+                return !$organisation->subscribed;
             } else {
-                array_push($Organisation_Array, $x);
+                return true;
             }
-        }
-
-        return response()->json(['data' => $Organisation_Array]);
+        });
      }
 }
